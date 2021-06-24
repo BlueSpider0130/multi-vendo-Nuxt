@@ -13,7 +13,7 @@ export const getProductList = async () => {
         // }}
     ).then((res) => {
         if (res.status == 200) {
-            console.log(res.data);
+            console.log("this is api data: ", res.data);
             return res.data;
         }
     }).catch((err) => {

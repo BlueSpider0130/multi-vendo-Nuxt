@@ -17,13 +17,13 @@
             </template>
           </v-img>
           <v-card-text class="pt-6" style="position: relative;">
-            <v-checkbox :label="item.price+'£'" color="orange" hide-details @click="item_click(i)" v-model="item.selected"></v-checkbox>
+            <v-checkbox :label="item.price+'£'" color="orange" hide-details @click="item_click(i)" v-model="item.sel"></v-checkbox>
             <div class="font-weight-light grey--text text-h6 mb-2">
             </div>
             <h3 class="text-h6 font-weight-light orange--text mb-2">
               {{ item.name }}
             </h3>
-            <div v-if='item.selected' class="d-flex justify-center align-center">
+            <div v-if='item.sel' class="d-flex justify-center align-center">
               <v-btn class="mx-2" fab dark small color="primary" @click="calc(i, item.order==1?item.order:item.order--)">
                 <v-icon dark>
                   mdi-minus
@@ -44,27 +44,20 @@
       This is total cost:
       £{{ total_cost.toFixed(2) }}
       <template v-slot:action="{ attrs }">
-        <v-btn color="orange" text v-bind="attrs" @click="snackbar = false">
+        <v-btn color="orange" text v-bind="attrs" @click="order()">
           Order Now
         </v-btn>
-        <!-- <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn> -->
       </template>
     </v-snackbar>
   </v-row>
 </template>
 
 <script>
-import Logo from "~/components/Logo.vue";
-import VuetifyLogo from "~/components/VuetifyLogo.vue";
 import { getProductList } from "../../utils/API";
 
 export default {
   layout: "product",
   components: {
-    Logo,
-    VuetifyLogo
   },
 
   data() {
@@ -80,7 +73,7 @@ export default {
   },
   methods: {
     item_click(index) {   //click the checkbox button
-      let selected = this.tbl_data[index].selected
+      let selected = this.tbl_data[index].sel
       console.log(selected)
       if (selected == true) {
         this.snackbar = true
@@ -110,14 +103,18 @@ export default {
       let res = 0
       for(let cost of prices) res += cost
       return res;
+    },
+    order(){
+      this.snackbar = false
+      console.log(this.tbl_data)
     }
   },
   async mounted() {
     console.log("this is before all");
     var temp = await getProductList(null);
     temp.map((t, index)=>{
-      t['order'] = 1;
-      t['selected'] = false;
+      // t['order'] = 0;
+      // t['sel'] = false;
     })
     this.tbl_data = temp;
     for(let i =  0; i < this.tbl_data.length; i++) this.own_cost[i] = 0
@@ -126,14 +123,6 @@ export default {
 };
 </script>
 <style scoped>
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.9;
-  position: absolute;
-  width: 100%;
-}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

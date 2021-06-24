@@ -27,7 +27,7 @@
     </v-app-bar>
     <v-main>
       <v-container>
-        <nuxt />
+        <nuxt />   <!--  this will be include pages in pages folder -->
       </v-container>
     </v-main>
     <v-navigation-drawer v-model="drawer" fixed temporary success>
