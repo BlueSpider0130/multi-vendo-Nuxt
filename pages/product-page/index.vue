@@ -24,13 +24,13 @@
               {{ item.name }}
             </h3>
             <div v-if='item.sel' class="d-flex justify-center align-center">
-              <v-btn class="mx-2" fab dark small color="primary" @click="calc(i, item.order==1?item.order:item.order--)">
+              <v-btn class="mx-2" fab dark small color="primary" @click="calc(i, item.order, 'm')">
                 <v-icon dark>
                   mdi-minus
                 </v-icon>
               </v-btn>
-              <input v-model="item.order" onKeyDown="return false" style="width:30px" type="number" min="1" max="10" />
-              <v-btn class="mx-2" fab dark small color="primary" @click="calc(i, item.order++)">
+              <input v-model="item.order" onKeyDown="return false" style="width:30px" type="number" min="0" max="10" />
+              <v-btn class="mx-2" fab dark small color="primary" @click="calc(i, item.order, 'p')">
                 <v-icon dark>
                   mdi-plus
                 </v-icon>
@@ -91,7 +91,16 @@ export default {
       this.total_cost = res
       console.log("this is total cost:", res)
     },
-    calc(index, order_count) {    //click the plus or minus button
+    calc(index, order_count, para) {    //click the plus or minus button
+      if (para == 'p') {
+        this.tbl_data[index].order = order_count + 1
+      }else if (para == 'm') {
+        this.tbl_data[index].order = order_count - 1
+        if (this.tbl_data[index].order == 0) {
+          this.tbl_data[index].sel = false
+        }
+      }
+      // console.log(order_count)
       const cost = this.tbl_data[index].price * this.tbl_data[index].order
       this.own_cost[index] = cost
       
